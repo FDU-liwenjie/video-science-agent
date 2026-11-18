@@ -57,6 +57,34 @@
       </button>
     </div>
 
+    <div class="player__export">
+      <div>
+        <strong>导出成片</strong>
+        <span>{{ hasRecordedNarration ? '含旁白、字幕与 BGM' : '无旁白音轨时导出画面、字幕与 BGM' }}</span>
+      </div>
+      <div class="player__export-buttons">
+        <button type="button" :disabled="isStarting || isExporting" @click="renderVideo('720p')">
+          导出 720p
+        </button>
+        <button type="button" :disabled="isStarting || isExporting" @click="renderVideo('1080p')">
+          导出 1080p
+        </button>
+      </div>
+    </div>
+
+    <div v-if="isExporting" class="player__export-progress">
+      <div>
+        <progress :value="exportProgress" max="1" />
+        <span>{{ Math.round(exportProgress * 100) }}%</span>
+      </div>
+      <p>正在实时渲染，请保持此标签页可见，不要切换窗口。</p>
+    </div>
+
+    <div v-if="downloadUrl" class="player__download">
+      <span>成片已生成</span>
+      <a :href="downloadUrl" :download="downloadName">下载 {{ downloadName }}</a>
+    </div>
+
     <p v-if="errorMessage" class="player__error" role="alert">{{ errorMessage }}</p>
   </section>
 </template>
@@ -65,7 +93,14 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import type { VideoDsl } from '../dsl/types'
 import { applyDefaults } from '../dsl/defaults'
-import { Engine, buildTimeline, createAmbientBgm, sceneIndexAt } from '../engine'
+import {
+  Engine,
+  buildTimeline,
+  createAmbientBgm,
+  exportVideo,
+  sceneIndexAt,
+  type NarrationClip,
+} from '../engine'
 
 const props = defineProps<{
   dsl: VideoDsl
@@ -85,10 +120,15 @@ const canvasSize = computed(() =>
     : { width: 960, height: 540 },
 )
 const activeScene = computed(() => sceneIndexAt(timeline.value, currentTime.value))
+const hasRecordedNarration = computed(() => props.narration?.some(Boolean) ?? false)
 
 const currentTime = ref(0)
 const isPlaying = ref(false)
 const isStarting = ref(false)
+const isExporting = ref(false)
+const exportProgress = ref(0)
+const downloadUrl = ref('')
+const downloadName = ref('')
 const errorMessage = ref('')
 
 let engine: Engine | undefined
@@ -109,6 +149,7 @@ watch([video, timeline], resetEngine, { flush: 'post' })
 
 onBeforeUnmount(() => {
   stopPlayback()
+  if (downloadUrl.value) URL.revokeObjectURL(downloadUrl.value)
   void audioContext?.close()
 })
 
@@ -311,6 +352,51 @@ function resetEngine(): void {
 
 function renderCurrentFrame(): void {
   engine?.renderAt(Math.min(currentTime.value, Math.max(0, duration.value - 0.001)))
+}
+
+async function renderVideo(quality: '720p' | '1080p'): Promise<void> {
+  if (isExporting.value) return
+  pause()
+  isExporting.value = true
+  exportProgress.value = 0
+  errorMessage.value = ''
+  if (downloadUrl.value) URL.revokeObjectURL(downloadUrl.value)
+  downloadUrl.value = ''
+  downloadName.value = ''
+
+  try {
+    const portrait = video.value.meta.resolution === '1080x1920'
+    const exportCanvas = document.createElement('canvas')
+    exportCanvas.width = quality === '1080p' ? (portrait ? 1080 : 1920) : portrait ? 720 : 1280
+    exportCanvas.height = quality === '1080p' ? (portrait ? 1920 : 1080) : portrait ? 1280 : 720
+    const exportEngine = new Engine({
+      dsl: video.value,
+      timeline: timeline.value,
+      canvas: exportCanvas,
+    })
+    const bgm = props.bgm ?? synthesizedBgm ?? (await createAmbientBgm(duration.value))
+    const clips: NarrationClip[] = timeline.value.scenes.flatMap((scene) => {
+      const buffer = props.narration?.[scene.index]
+      if (!buffer || scene.narrationStart === null || scene.narrationEnd === null) return []
+      return [{ buffer, start: scene.narrationStart, end: scene.narrationEnd }]
+    })
+    const result = await exportVideo({
+      engine: exportEngine,
+      canvas: exportCanvas,
+      narration: clips,
+      bgm,
+      fps: 30,
+      onProgress: (ratio) => {
+        exportProgress.value = ratio
+      },
+    })
+    downloadUrl.value = URL.createObjectURL(result.blob)
+    downloadName.value = result.filename
+  } catch (error) {
+    errorMessage.value = error instanceof Error ? `导出失败：${error.message}` : '导出失败'
+  } finally {
+    isExporting.value = false
+  }
 }
 
 function remainingText(text: string, ratio: number): string {

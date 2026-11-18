@@ -178,7 +178,7 @@ export const butterflyDsl: VideoDsl = {
           id: 'conclusion',
           type: 'text',
           content: '不是蝴蝶制造风暴，而是复杂系统放大了微小变化。',
-          position: [0.5, 0.84],
+          position: [0.5, 0.76],
           fontSize: 34,
           maxWidth: 1500,
           enter: { anim: 'fade', dur: 0.8, delay: 1.8 },

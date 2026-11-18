@@ -191,6 +191,98 @@ button:disabled {
   background: #edf3ee;
 }
 
+.player__export {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 20px 18px;
+  padding-top: 16px;
+  border-top: 1px solid #edf0eb;
+}
+
+.player__export > div:first-child {
+  display: grid;
+  gap: 4px;
+}
+
+.player__export strong {
+  color: #354139;
+  font-size: 14px;
+}
+
+.player__export span {
+  color: #7a837c;
+  font-size: 12px;
+}
+
+.player__export-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.player__export-buttons button,
+.player__download a {
+  padding: 8px 12px;
+  border: 1px solid #b8c7bb;
+  border-radius: 8px;
+  color: #375d45;
+  background: #f4f8f4;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.player__export-progress {
+  margin: 0 20px 18px;
+  padding: 14px;
+  border-radius: 10px;
+  background: #f3f6f2;
+}
+
+.player__export-progress > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.player__export-progress progress {
+  flex: 1;
+  height: 8px;
+  accent-color: #527d60;
+}
+
+.player__export-progress span {
+  min-width: 40px;
+  color: #52715e;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.player__export-progress p {
+  margin: 8px 0 0;
+  color: #747e76;
+  font-size: 12px;
+}
+
+.player__download {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 20px 18px;
+  color: #52715e;
+  font-size: 14px;
+}
+
+.player__download a {
+  overflow: hidden;
+  max-width: 70%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .player__error {
   margin: 0;
   padding: 0 20px 18px;
@@ -246,6 +338,19 @@ button:disabled {
   .player__cover-button {
     width: 58px;
     height: 58px;
+  }
+
+  .player__export {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .player__export-buttons {
+    width: 100%;
+  }
+
+  .player__export-buttons button {
+    flex: 1;
   }
 
   .demo-note {

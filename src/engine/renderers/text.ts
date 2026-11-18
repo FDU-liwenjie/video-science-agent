@@ -27,20 +27,22 @@ export function drawText(
   const maxWidth = el.maxWidth ? el.maxWidth * scaleBase : undefined
   const lineHeight = fontSize * 1.35
 
-  let lines: string[] = [content]
+  let lines = content.split('\n')
   if (maxWidth) {
     lines = []
-    let line = ''
-    for (const token of tokenize(content)) {
-      const candidate = line + token
-      if (line && ctx.measureText(candidate).width > maxWidth) {
-        lines.push(line.trimEnd())
-        line = token.trimStart()
-      } else {
-        line = candidate
+    for (const paragraph of content.split('\n')) {
+      let line = ''
+      for (const token of tokenize(paragraph)) {
+        const candidate = line + token
+        if (line && ctx.measureText(candidate).width > maxWidth) {
+          lines.push(line.trimEnd())
+          line = token.trimStart()
+        } else {
+          line = candidate
+        }
       }
+      lines.push(line.trimEnd())
     }
-    if (line) lines.push(line.trimEnd())
 
     const widest = Math.max(...lines.map((l) => ctx.measureText(l).width))
     if (widest > maxWidth) {
