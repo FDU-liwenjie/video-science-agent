@@ -96,6 +96,7 @@ export interface ChartElement extends ElementBase {
   type: 'chart'
   chart: ChartKind
   data: number[]
+  size?: number
 }
 
 export interface PathElement extends ElementBase {

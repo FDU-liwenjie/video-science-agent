@@ -1,0 +1,7 @@
+export { Engine, type EngineOptions } from './engine'
+export { buildTimeline, estimateDuration, sceneIndexAt } from './timeline'
+export type { Timeline, TimelineScene } from './timeline'
+export { getTheme, THEMES, type Theme } from './theme'
+export { exportVideo, type ExportOptions, type ExportResult, type NarrationClip } from './exporter'
+export { createAmbientBgm } from './synthBgm'
+export type { WordTimestamp } from './subtitle'

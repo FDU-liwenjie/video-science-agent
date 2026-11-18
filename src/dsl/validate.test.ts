@@ -60,7 +60,7 @@ describe('validateDsl', () => {
     ;(bad.scenes[0].elements![0] as { src: string }).src = 'tornado.png'
     const result = validateDsl(bad)
     expect(result.ok).toBe(true)
-    expect(result.warnings.some((w) => w.path === 'scenes[0].elements![0].src')).toBe(true)
+    expect(result.warnings.some((w) => w.path === 'scenes[0].elements[0].src')).toBe(true)
     expect((bad.scenes[0].elements![0] as { src: string }).src).toBe(FALLBACK_ASSET)
   })
 
