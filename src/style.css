@@ -1,29 +1,256 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html,
-body,
-#app {
-  height: 100%;
-}
-
-body {
+:root {
+  color: #202522;
+  background: #f3f4f0;
   font-family:
     -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB',
     'Microsoft YaHei', sans-serif;
+  font-synthesis: none;
   -webkit-font-smoothing: antialiased;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
 .app {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  height: 100%;
-  padding: 24px;
+  width: min(1080px, 100%);
+  margin: 0 auto;
+  padding: 52px 28px 40px;
+}
+
+.hero {
+  margin-bottom: 28px;
   text-align: center;
+}
+
+.hero__badge {
+  display: inline-flex;
+  padding: 6px 12px;
+  border: 1px solid #cbd6ce;
+  border-radius: 999px;
+  color: #52715e;
+  background: #e9efe9;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.hero h1 {
+  margin: 18px 0 10px;
+  font-size: clamp(32px, 5vw, 48px);
+  letter-spacing: -0.04em;
+}
+
+.hero p {
+  margin: 0;
+  color: #657068;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.player {
+  overflow: hidden;
+  border: 1px solid #dfe3dc;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 20px 60px rgb(39 51 42 / 10%);
+}
+
+.player__stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #171a18;
+}
+
+.player__stage canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 70vh;
+  object-fit: contain;
+  cursor: pointer;
+}
+
+.player__cover-button {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border: 0;
+  border-radius: 50%;
+  color: #29382e;
+  background: rgb(255 255 255 / 90%);
+  box-shadow: 0 8px 30px rgb(0 0 0 / 20%);
+  transition: transform 160ms ease;
+}
+
+.player__cover-button:hover {
+  transform: scale(1.06);
+}
+
+.player__cover-button svg {
+  width: 36px;
+  height: 36px;
+  fill: currentcolor;
+}
+
+.player__status {
+  position: absolute;
+  padding: 10px 16px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgb(0 0 0 / 65%);
+  font-size: 14px;
+}
+
+.player__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px 8px;
+}
+
+.player__buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.player__buttons button,
+.player__scenes button {
+  border: 1px solid #d8ded8;
+  border-radius: 8px;
+  color: #36433a;
+  background: #fff;
+  font-weight: 600;
+}
+
+.player__buttons button {
+  min-width: 68px;
+  padding: 8px 14px;
+}
+
+.player__buttons button:first-child {
+  border-color: #375d45;
+  color: #fff;
+  background: #375d45;
+}
+
+.player__time {
+  color: #69736c;
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+}
+
+.player__seek {
+  display: block;
+  width: calc(100% - 40px);
+  margin: 10px 20px 14px;
+  accent-color: #527d60;
+  cursor: pointer;
+}
+
+.player__scenes {
+  display: flex;
+  gap: 8px;
+  padding: 0 20px 18px;
+}
+
+.player__scenes button {
+  padding: 6px 12px;
+  color: #6a746d;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.player__scenes button.active {
+  border-color: #aebfb2;
+  color: #375d45;
+  background: #edf3ee;
+}
+
+.player__error {
+  margin: 0;
+  padding: 0 20px 18px;
+  color: #a13d36;
+  font-size: 14px;
+}
+
+.demo-note {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 4px;
+  color: #687169;
+  font-size: 14px;
+}
+
+.demo-note strong {
+  color: #354139;
+  font-size: 15px;
+}
+
+.demo-note p {
+  margin: 6px 0 0;
+  line-height: 1.6;
+}
+
+.demo-note > span {
+  flex-shrink: 0;
+  padding: 7px 11px;
+  border-radius: 8px;
+  background: #e6e9e3;
+  font-size: 12px;
+}
+
+@media (max-width: 640px) {
+  .app {
+    padding: 32px 14px 24px;
+  }
+
+  .hero {
+    margin-bottom: 22px;
+  }
+
+  .hero p {
+    font-size: 15px;
+  }
+
+  .player {
+    border-radius: 14px;
+  }
+
+  .player__cover-button {
+    width: 58px;
+    height: 58px;
+  }
+
+  .demo-note {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
 }

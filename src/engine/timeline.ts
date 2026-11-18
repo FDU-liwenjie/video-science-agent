@@ -19,7 +19,10 @@ export function estimateDuration(text: string): number {
   return Math.max(1, cjk * 0.25 + latinWords * 0.4)
 }
 
-export function buildTimeline(dsl: VideoDsl, narrationDurations: number[] = []): Timeline {
+export function buildTimeline(
+  dsl: VideoDsl,
+  narrationDurations: (number | undefined)[] = [],
+): Timeline {
   let cursor = 0
   const scenes = dsl.scenes.map((scene, i) => {
     const padding = scene.padding ?? [0.4, 0.4]

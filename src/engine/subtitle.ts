@@ -78,10 +78,12 @@ export function drawSubtitle(ctx: CanvasRenderingContext2D, p: SubtitleParams): 
   ctx.roundRect(boxX, boxY, boxW, boxH, fontSize * 0.5)
   ctx.fill()
 
+  ctx.textAlign = 'left'
   lines.forEach((line, i) => {
     const y = boxY + padY + lineHeight * i + lineHeight / 2
+    const x = (p.w - ctx.measureText(line.text).width) / 2
     ctx.fillStyle = p.theme.subtitleText
-    ctx.fillText(line.text, p.w / 2, y)
+    ctx.fillText(line.text, x, y)
 
     const lineHighlight = Math.min(
       line.text.length,
@@ -89,7 +91,7 @@ export function drawSubtitle(ctx: CanvasRenderingContext2D, p: SubtitleParams): 
     )
     if (lineHighlight > 0) {
       ctx.fillStyle = p.theme.subtitleHighlight
-      ctx.fillText(line.text.slice(0, lineHighlight), p.w / 2, y)
+      ctx.fillText(line.text.slice(0, lineHighlight), x, y)
     }
   })
 
